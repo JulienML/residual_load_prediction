@@ -7,7 +7,7 @@ import joblib
 import plotly.express as px
 
 # Title
-st.title("🔋 Residual Load Prediction Dashboard")
+st.title("Residual Load Prediction Dashboard")
 
 # Load data
 @st.cache_data
@@ -20,7 +20,7 @@ def load_data():
 
 df = load_data()
 
-st.sidebar.header("📊 Dashboard Controls")
+st.sidebar.header("Dashboard Controls")
 
 # Sidebar filters
 date_range = st.sidebar.date_input("Select a date range", [df.index.min(), df.index.max()])
@@ -28,7 +28,7 @@ if len(date_range) == 2:
     df = df[(df.index.date >= date_range[0]) & (df.index.date <= date_range[1])]
 
 # Model selection
-model_choice = st.sidebar.selectbox("🤖 Select a model:", [
+model_choice = st.sidebar.selectbox("Select a model:", [
     "XGBoost", "KNN", "Linear Regression"
 ])
 
@@ -40,23 +40,23 @@ model_map = {
 }
 
 # Time series plot
-st.subheader("🔌 Energy Consumption Overview")
+st.subheader("Energy Consumption Overview")
 st.line_chart(df[['load', 'residual_load']])
 
 # Correlation heatmap
-st.subheader("📈 Correlation Matrix")
+st.subheader("Correlation Matrix")
 corr = df.corr()
 fig, ax = plt.subplots(figsize=(10, 8))
 sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f", ax=ax)
 st.pyplot(fig)
 
 # Histogram of residual load
-st.subheader("📊 Residual Load Distribution")
+st.subheader("Residual Load Distribution")
 fig2 = px.histogram(df, x='residual_load', nbins=50, title="Distribution of Residual Load")
 st.plotly_chart(fig2)
 
 # Model prediction
-st.subheader(f"📡 Prediction - {model_choice}")
+st.subheader(f"Prediction - {model_choice}")
 features = df[['Gb(i)', 'Gd(i)', 'H_sun', 'T2m', 'WS10m']]
 
 if st.button(f"Run prediction with {model_choice}"):
@@ -68,10 +68,10 @@ if st.button(f"Run prediction with {model_choice}"):
         rmse = np.sqrt(np.mean((df['residual_load'] - predictions)**2))
         st.success(f"RMSE for {model_choice} on the selected data: {rmse:.2f}")
     except FileNotFoundError:
-        st.error(f"⚠️ Model file for {model_choice} not found. Make sure it is exported from your notebook.")
+        st.error(f"Model file for {model_choice} not found. Make sure it is exported from your notebook.")
 
 # Peak detection
-st.subheader("🚨 Peak Consumption Detection")
+st.subheader("Peak Consumption Detection")
 thresh = st.slider("Set threshold for residual load peaks", 
                    min_value=0.0, 
                    max_value=float(df['residual_load'].max()), 
@@ -82,4 +82,4 @@ st.plotly_chart(fig3)
 
 # Footer
 st.markdown("---")
-st.markdown("ESILV Project – Energy Consumption Optimization")
+st.markdown("Explainability AI Project – Energy Consumption Optimization")
